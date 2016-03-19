@@ -1,0 +1,27 @@
+.container_track {
+    margin: 20px;
+    padding-top: 10px;
+    height: 30px;
+    position: relative;
+}
+.container_track_inner {
+    height: 20px;
+    background-color: #f89e59;
+}
+.track_inner {
+    width: 0;
+    height: 100%;
+    background-color: #FE4365;
+}
+.track_control {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    width: 32px;
+    height: 32px;
+    transform: translateX(-20px);
+    border: 4px solid #f5f5f5;
+    border-radius: 50%;
+    background-color: #FE4365;
+    cursor: pointer;
+}
