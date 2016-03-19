@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="devslide.css" rel="stylesheet" />
+    <style>
+    body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        color: #555;
+        background-color: #f5f5f5;
+    }
+
+    #track_select {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .track_inner_transition {
+        transition: width .3s linear;
+    }
+    .track_transition {
+        transition: left .3s linear;
+    }
+
+    .container_buttons {
+        position: relative;
+        margin: 20px;
+    }
+    .button_outer {
+        float: left;
+    }
+    .button_inner {
+        margin: 0 auto;
+        width: 40px;
+        height: 40px;
+        background-color: #f89e59;
+        cursor: pointer;
+        transition: background-color .2s linear;
+    }
+    .container_data {
+        margin: 20px;
+        padding-top: 20px;
+        text-align: center;
+    }
+    .button_active {
+        background-color: #FE4365;
+    }
+
+    </style>
+</head>
+<body>
+    <div id="track_select">
+        <div class="container_track"></div>
+
+        <div class="container_buttons"></div>
+        <div style="clear: both;"></div>
+        <h1 class="container_data"></h1>
+    </div>
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="third_party/jquery.mobile.custom.min.js"></script>
+    <script src="devslide.js"></script>
+    <script>
+    'use strict';
+
+    var json = [{
+        "item": 6
+    }, {
+        "item": 12
+    }, {
+        "item": 18
+    }, {
+        "item": 24
+    }, {
+        "item": 30
+    }];
+
+    //this is rough and ready
+    function populateButtons(l, containerButtons) {
+        var buttonOuter, buttonInner, percent;
+        var trackWidth = $('.container_track').width();
+        var width = (trackWidth / l) / trackWidth * 100;
+        for (var i = 0; i < l; i++) {
+            buttonOuter = document.createElement('div');
+            buttonInner = document.createElement('div');
+            buttonOuter.className = 'button_outer';
+            buttonInner.className = 'button_inner';
+            buttonOuter.style.width = width + '%';
+            buttonOuter.appendChild(buttonInner);
+            containerButtons.appendChild(buttonOuter);
+        }
+    }
+    populateButtons(5, $('.container_buttons')[0]);
+
+
+    //the important bit
+    var track = new trackSelect;
+
+    //couple of callbacks. first just for looks, second to set active
+    track.init($('.container_track')[0], 5,
+        function(active) {
+            $('.button_active').removeClass('button_active');
+            $('.button_inner').eq(active).addClass('button_active');
+        },
+        function(active) {
+            $('.button_active').removeClass('button_active');
+            $('.button_inner').eq(active).addClass('button_active');
+            $('.container_data')[0].innerHTML = json[active].item;
+        }
+    );
+
+    //don't like adding events to classes.  no need to screw around
+    $(track.trackControl).on('vmousedown', function(e) {
+        $(this).removeClass('track_transition');
+        $(track.trackInner).removeClass('track_inner_transition');
+        track.grab(e.pageX);
+    });
+    $('.container_track').on('click', function(e) {
+        $(track.trackControl).addClass('track_transition');
+        $(track.trackInner).addClass('track_inner_transition');
+        track.click(e.pageX);
+    });
+    $(document).on('vmousemove', function(e) {
+        track.dragTrack(e.pageX);
+    });
+
+    $(document).on('vmouseup', function(e) {
+        e.stopPropagation();
+        track.up(e.pageX);
+    });
+    $('.container_buttons').on('click', '.button_inner', function(e) {
+        $(track.trackControl).addClass('track_transition');
+        $(track.trackInner).addClass('track_inner_transition');
+        track.direct($(this).parent().index());
+    });
+    </script>
+</body>
+</html>
