@@ -5,12 +5,15 @@
     <link href="devslide.css" rel="stylesheet" />
     <style>
     body {
+        max-width: 640px;
+        margin: 0 auto;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         color: #555;
         background-color: #f5f5f5;
     }
 
     #track_select {
+        margin: 20px;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
         -khtml-user-select: none;
@@ -37,28 +40,40 @@
         margin: 0 auto;
         width: 40px;
         height: 40px;
-        background-color: #f89e59;
+        background-color: #999;
         cursor: pointer;
         transition: background-color .2s linear;
     }
     .container_data {
-        margin: 20px;
         padding-top: 20px;
-        text-align: center;
     }
     .button_active {
-        background-color: #FE4365;
+        background-color: #555;
     }
 
+    .data_1{
+
+    }
+    .data_2{
+
+    }
     </style>
 </head>
 <body>
     <div id="track_select">
+        <h1>Drag and click slide selections</h1>
+        <p>A draggable selection track in js. Should be supported by all modern browsers.
+        Intended for use by people who don't mind reading through the source and tweaking where needed.</p>
+        <p>View on <a href="https://github.com/opencontributions/devslide">Github</a> for more detail.</p>
         <div class="container_track"></div>
 
         <div class="container_buttons"></div>
         <div style="clear: both;"></div>
-        <h1 class="container_data"></h1>
+        <div class="container_data">
+            <h1 class="data_0"></h1>
+            <p class="data_1"></p>
+            <p class="data_2"></p>
+        </div>
     </div>
     <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
     <script src="third_party/jquery.mobile.custom.min.js"></script>
@@ -67,15 +82,25 @@
     'use strict';
 
     var json = [{
-        "item": 6
+        "title": "Ducks",
+        "intro": "Duck is the common name for a large number of species in the waterfowl family Anatidae, which also includes swans and geese.",
+        "detail": "Ducks are sometimes confused with several types of unrelated water birds with similar forms, such as loons or divers, grebes, gallinules, and coots."
     }, {
-        "item": 12
+        "title": "Owls",
+        "intro": "Owls are birds from the order Strigiformes, which includes about 200 species of mostly solitary and nocturnal birds of prey.",
+        "detail": "Owls are typified by an upright stance, a large, broad head, binocular vision, binaural hearing, sharp talons and feathers adapted for silent flight."
     }, {
-        "item": 18
+        "title": "Beer",
+        "intro": "Beer is the world's most widely consumed and likely the oldest alcoholic beverage; it is the third most popular drink overall, after water and tea.",
+        "detail": "The production of beer is called brewing, which involves the fermentation of starches, mainly derived from cereal grains."
     }, {
-        "item": 24
+        "title": "Salt",
+        "intro": "Common salt is a mineral composed primarily of sodium chloride (NaCl), a chemical compound belonging to the larger class of salts",
+        "detail": "Salt is present in vast quantities in seawater, where it is the main mineral constituent; the open ocean has about 35 grams (1.2 oz) of solids per litre, a salinity of 3.5%"
     }, {
-        "item": 30
+        "title": "Neptune",
+        "intro": "Neptune is the eighth and farthest known planet from the Sun in the Solar System. It is the fourth-largest planet by diameter and the third-largest by mass.",
+        "detail": "Neptune is 17 times the mass of Earth and is slightly more massive than its near-twin Uranus, which is 15 times the mass of Earth and slightly larger than Neptune."
     }];
 
     //this is rough and ready
@@ -108,7 +133,9 @@
         function(active) {
             $('.button_active').removeClass('button_active');
             $('.button_inner').eq(active).addClass('button_active');
-            $('.container_data')[0].innerHTML = json[active].item;
+            $('.data_0')[0].innerHTML = json[active].title;
+            $('.data_1')[0].innerHTML = json[active].intro;
+            $('.data_2')[0].innerHTML = json[active].detail;
         }
     );
 
