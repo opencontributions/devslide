@@ -25,3 +25,9 @@
     background-color: #555;
     cursor: pointer;
 }
+.track_inner_transition {
+    transition: width .3s linear;
+}
+.track_control_transition {
+    transition: left .3s linear;
+}

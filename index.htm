@@ -22,13 +22,6 @@
         -webkit-user-select: none;
     }
 
-    .track_inner_transition {
-        transition: width .3s linear;
-    }
-    .track_transition {
-        transition: left .3s linear;
-    }
-
     .container_buttons {
         position: relative;
         margin: 20px;
@@ -138,19 +131,13 @@
             $('.data_2')[0].innerHTML = json[active].detail;
         }
     );
+
     $(track.trackControl).on('vmousedown', function(e) {
         e.stopPropagation();
-        $(this).removeClass('track_transition');
-        $(track.trackInner).removeClass('track_inner_transition');
         track.grab(e.pageX);
     });
-    $('.container_track').on('click', function(e) {
-        $(track.trackControl).addClass('track_transition');
-        $(track.trackInner).addClass('track_inner_transition');
-        track.click(e.pageX);
-    });
-    $('.container_track').on('vmousedown', function(e) {
-        track.trackDown();
+    $(track.container).on('click', function(e) {
+        track.click(e.pageX, true);
     });
     $(document).on('vmousemove', function(e) {
         track.dragTrack(e.pageX);
@@ -159,9 +146,7 @@
         track.up(e.pageX);
     });
     $('.container_buttons').on('click', '.button_inner', function(e) {
-        $(track.trackControl).addClass('track_transition');
-        $(track.trackInner).addClass('track_inner_transition');
-        track.direct($(this).parent().index());
+        track.direct($(this).parent().index(), true);
     });
     </script>
 </body>

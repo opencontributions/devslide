@@ -1,18 +1,17 @@
-a draggable selection track in js.  no particular license.  no jquery or other libs required.
+A draggable selection track in js.  No jquery or other libraries required.
 
-the technique is to set "dragActive" on mousedown, use document mousemove event.pageX to determine the control position and treat document mouseup as the release event where "dragActive" is true.
+CSS transitions, adapts to container width.
 
-should be supported by all modern browsers.  intended for use by people who don't mind reading through the source and tweaking where needed.
+There are two callbacks.  The first callback is fired when the control is within an item range, the second is fired on setting the item.
 
-usage:
+Events are set up independently for easy touchscreen support
+
+Usage:
 
     var track = new trackSelect;
     track.init(containerElement, numberOfItems, callback0, callback1);
 
-
-the first callback is fired when the control is within an item range, the second is fired on setting the item.
-
-example:
+Example:
 
     var track = new trackSelect;
     track.init($('.container_track')[0], 5,
@@ -27,31 +26,27 @@ example:
         }
     );
 
+Methods available are grab(pageX), click(pageX, transition), dragTrack(pageX), up(pageX) and direct(index, transition).
 
-example events (using a minimal build of jquery mobile for virtual mouse events):
+transition is a boolean indicated whether to apply CSS transition classes.
+
+Example events (using a minimal build of jQuery mobile for virtual mouse events):
 
     $(track.trackControl).on('vmousedown', function(e) {
-        $(this).removeClass('track_transition');
-        $(track.trackInner).removeClass('track_inner_transition');
+        e.stopPropagation();
         track.grab(e.pageX);
     });
-    $('.container_track').on('click', function(e) {
-        $(track.trackControl).addClass('track_transition');
-        $(track.trackInner).addClass('track_inner_transition');
-        track.click(e.pageX);
+    $(track.container).on('click', function(e) {
+        track.click(e.pageX, true);
     });
     $(document).on('vmousemove', function(e) {
         track.dragTrack(e.pageX);
     });
-
     $(document).on('vmouseup', function(e) {
-        e.stopPropagation();
         track.up(e.pageX);
     });
     $('.container_buttons').on('click', '.button_inner', function(e) {
-        $(track.trackControl).addClass('track_transition');
-        $(track.trackInner).addClass('track_inner_transition');
-        track.direct($(this).parent().index());
+        track.direct($(this).parent().index(), true);
     });
 
-demo available at: https://opencontributions.github.io/devslide/
+Demo available at: https://opencontributions.github.io/devslide/

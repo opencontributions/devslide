@@ -17,9 +17,9 @@ function trackSelect() {
         }
     }
     function setActive(self, i) {
+	self.active = i;
         self.cb1(i);
     }
-
     function detectBoundaries(self, pos) {
         for (var i = 0; i < self.controlPoints; i++) {
             if (pos >= self.boundaries[i][1] && pos < self.boundaries[i][2]) {
@@ -38,15 +38,19 @@ function trackSelect() {
     }
     function populateTrack(container) {
         var containerTrackInner = document.createElement('div');
+	var trackInner = document.createElement('div');
+	var trackControl = document.createElement('div');
         containerTrackInner.className = 'container_track_inner';
-        var trackInner = document.createElement('div');
         trackInner.className = 'track_inner';
-        var trackControl = document.createElement('div');
         trackControl.className = 'track_control';
         containerTrackInner.appendChild(trackInner);
         container.appendChild(containerTrackInner);
         container.appendChild(trackControl);
         return [trackInner, trackControl];
+    }
+    function setTransition(self) {
+	self.trackInner.className = 'track_inner track_inner_transition';
+	self.trackControl.className = 'track_control track_control_transition';
     }
     return {
         init: function(container, points, cb0, cb1) {
@@ -56,9 +60,9 @@ function trackSelect() {
             this.trackInner = eles[0];
             this.trackControl = eles[1];
             this.controlPoints = points;
-            this.dragActive = false;
 	    this.dragging = false;
             this.active = 0;
+	    this.grabbed = -1;
             this.cb0 = cb0;
             this.cb1 = cb1;
             setBoundaries(this, points);
@@ -66,42 +70,36 @@ function trackSelect() {
         },
         grab: function(x) {
             setBoundaries(this, this.controlPoints);
-            this.dragActive = true;
+	    this.trackInner.className = 'track_inner';
+	    this.trackControl.className = 'track_control';
+	    this.dragging = true;
             //this is a little detail to drag the control from the exact click point
             //within it rather from its centre. don't know which is nicer
             var clickOffset = x - this.trackControl.getBoundingClientRect().left - radius;
             clickOffset = 0;
             this.offset = this.offset + clickOffset;
+	    this.grabbed = detectBoundaries(this, x - this.offset);
         },
-        click: function(x) {
-            if (this.dragging === true) {
-		this.dragging = false;
-                return true;
-            }
+        click: function(x, transition) {
+            if (this.dragging === true) return true;
             setBoundaries(this, this.controlPoints);
-            this.dragActive = false;
-            this.active = detectBoundaries(this, x - this.offset);
-            this.direct(this.active);
-        },
-        trackDown: function(x) {
-            this.preventClick = false;
+	    var active = detectBoundaries(this, x - this.offset);
+	    if (active === this.active) return true;
+	    if (transition === true) setTransition(this);
+            this.direct(active, transition);
         },
         up: function(x) {
-            if (this.dragActive === false) {
-                return true;
-            }
-            else {
-                this.dragActive = false;
-            }
-            this.direct(this.active);
+            if (this.dragging === false) return true;
+	    this.dragging = false;
+            this.direct(this.active, false);
         },
-        direct: function(i) {
+        direct: function(i, transition) {
+	    if (transition === true) setTransition(this);
             movePosition(this, this.boundaries[i][0]);
             setActive(this, i);
         },
         dragTrack: function(x) {
-            if (this.dragActive === false) return true;
-	    this.dragging = true;
+            if (this.dragging === false) return true;
             if (x - this.offset < radius ||
                 x - this.offset > this.trackWidth - radius) return true;
             movePosition(this, x - this.offset);
