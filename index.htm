@@ -139,6 +139,7 @@
         }
     );
     $(track.trackControl).on('vmousedown', function(e) {
+        e.stopPropagation();
         $(this).removeClass('track_transition');
         $(track.trackInner).removeClass('track_inner_transition');
         track.grab(e.pageX);
@@ -147,6 +148,9 @@
         $(track.trackControl).addClass('track_transition');
         $(track.trackInner).addClass('track_inner_transition');
         track.click(e.pageX);
+    });
+    $('.container_track').on('vmousedown', function(e) {
+        track.trackDown();
     });
     $(document).on('vmousemove', function(e) {
         track.dragTrack(e.pageX);

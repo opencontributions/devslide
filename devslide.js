@@ -57,7 +57,7 @@ function trackSelect() {
             this.trackControl = eles[1];
             this.controlPoints = points;
             this.dragActive = false;
-	    this.dragMoved = false;
+	    this.dragging = false;
             this.active = 0;
             this.cb0 = cb0;
             this.cb1 = cb1;
@@ -75,13 +75,16 @@ function trackSelect() {
         },
         click: function(x) {
             if (this.dragging === true) {
+		this.dragging = false;
                 return true;
             }
             setBoundaries(this, this.controlPoints);
             this.dragActive = false;
             this.active = detectBoundaries(this, x - this.offset);
             this.direct(this.active);
-            setActive(this, this.active);
+        },
+        trackDown: function(x) {
+            this.preventClick = false;
         },
         up: function(x) {
             if (this.dragActive === false) {
@@ -90,7 +93,6 @@ function trackSelect() {
             else {
                 this.dragActive = false;
             }
-	    self.dragging = false;
             this.direct(this.active);
         },
         direct: function(i) {
