@@ -138,8 +138,6 @@
             $('.data_2')[0].innerHTML = json[active].detail;
         }
     );
-
-    //don't like adding events to classes.  no need to screw around
     $(track.trackControl).on('vmousedown', function(e) {
         $(this).removeClass('track_transition');
         $(track.trackInner).removeClass('track_inner_transition');
@@ -153,9 +151,7 @@
     $(document).on('vmousemove', function(e) {
         track.dragTrack(e.pageX);
     });
-
     $(document).on('vmouseup', function(e) {
-        e.stopPropagation();
         track.up(e.pageX);
     });
     $('.container_buttons').on('click', '.button_inner', function(e) {
