@@ -17,7 +17,6 @@ function trackSelect() {
         }
     }
     function setActive(self, i) {
-	console.log('fired');
 	if (i === self.active) return true;
 	self.active = i;
         self.cb1(i);
@@ -83,7 +82,6 @@ function trackSelect() {
             this.offset = this.offset + clickOffset;
         },
         click: function(x, transition) {
-	    console.log('click');
             if (this.dragging === true) return true;
 	    if (this.preventClick === true) {
 		this.preventClick = false;
@@ -94,7 +92,6 @@ function trackSelect() {
             this.direct(detectBoundaries(this, x - this.offset), transition);
         },
         up: function(x) {
-	    console.log('up');
             if (this.controlDown === false) return true;
 	    this.controlDown = false;
             this.direct(this.active, false);
