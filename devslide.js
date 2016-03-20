@@ -17,6 +17,8 @@ function trackSelect() {
         }
     }
     function setActive(self, i) {
+	console.log('fired');
+	if (i === self.active) return true;
 	self.active = i;
         self.cb1(i);
     }
@@ -60,37 +62,41 @@ function trackSelect() {
             this.trackInner = eles[0];
             this.trackControl = eles[1];
             this.controlPoints = points;
-	    this.dragging = false;
+	    this.controlDown = false;
             this.active = 0;
-	    this.grabbed = -1;
+	    this.preventClick = false;
             this.cb0 = cb0;
             this.cb1 = cb1;
             setBoundaries(this, points);
             this.direct(0);
+	    this.cb1(0);
         },
         grab: function(x) {
             setBoundaries(this, this.controlPoints);
 	    this.trackInner.className = 'track_inner';
 	    this.trackControl.className = 'track_control';
-	    this.dragging = true;
+	    this.controlDown = true;
             //this is a little detail to drag the control from the exact click point
             //within it rather from its centre. don't know which is nicer
             var clickOffset = x - this.trackControl.getBoundingClientRect().left - radius;
             clickOffset = 0;
             this.offset = this.offset + clickOffset;
-	    this.grabbed = detectBoundaries(this, x - this.offset);
         },
         click: function(x, transition) {
+	    console.log('click');
             if (this.dragging === true) return true;
+	    if (this.preventClick === true) {
+		this.preventClick = false;
+		return true;
+	    }
             setBoundaries(this, this.controlPoints);
-	    var active = detectBoundaries(this, x - this.offset);
-	    if (active === this.active) return true;
 	    if (transition === true) setTransition(this);
-            this.direct(active, transition);
+            this.direct(detectBoundaries(this, x - this.offset), transition);
         },
         up: function(x) {
-            if (this.dragging === false) return true;
-	    this.dragging = false;
+	    console.log('up');
+            if (this.controlDown === false) return true;
+	    this.controlDown = false;
             this.direct(this.active, false);
         },
         direct: function(i, transition) {
@@ -99,10 +105,12 @@ function trackSelect() {
             setActive(this, i);
         },
         dragTrack: function(x) {
-            if (this.dragging === false) return true;
+            if (this.controlDown === false) return true;
             if (x - this.offset < radius ||
                 x - this.offset > this.trackWidth - radius) return true;
             movePosition(this, x - this.offset);
+	    var range = detectBoundaries(this, x - this.offset);
+	    if (range !== this.active) this.preventClick = true;
             this.active = detectBoundaries(this, x - this.offset);
         }
     };
