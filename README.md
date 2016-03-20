@@ -1,8 +1,6 @@
 A draggable selection track in js.  No jquery or other libraries required.
 
-CSS transitions, adapts to container width.
-
-There are two callbacks.  The first callback is fired when the control is within an item range, the second is fired on setting the item.
+CSS transitions, adapts to container width. There are two callbacks. The first callback is fired when the control is within an item range, the second is fired on setting the item.
 
 Events are set up independently for easy touchscreen support
 
@@ -28,7 +26,7 @@ Example:
 
 Methods available are grab(pageX), click(pageX, transition), dragTrack(pageX), up(pageX) and direct(index, transition).
 
-transition is a boolean indicated whether to apply CSS transition classes.
+transition is a boolean indicating whether to apply CSS transition classes.
 
 Example events (using a minimal build of jQuery mobile for virtual mouse events):
 
